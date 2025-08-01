@@ -5,74 +5,74 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Stethoscope, 
-  Brain, 
-  Heart, 
-  Activity, 
-  Microscope, 
-  BookOpen, 
-  Clock, 
-  Download,
-  Play,
-  FileText,
-  Calendar
-} from "lucide-react";
-
-const disciplines = [
-  { id: "anatomia", name: "Anatomia", icon: Microscope, color: "medical-blue", count: 12 },
-  { id: "fisiologia", name: "Fisiologia", icon: Activity, color: "medical-teal", count: 8 },
-  { id: "patologia", name: "Patologia", icon: Brain, color: "medical-green", count: 15 },
-  { id: "cardiologia", name: "Cardiologia", icon: Heart, color: "medical-blue-dark", count: 6 },
-  { id: "clinica", name: "Clínica Médica", icon: Stethoscope, color: "medical-amber", count: 20 },
-];
-
-const lectures = [
-  {
-    id: 1,
-    title: "Sistema Cardiovascular - Anatomia do Coração",
-    discipline: "anatomia",
-    duration: "45 min",
-    date: "2024-01-15",
-    status: "transcrito",
-    hasAudio: true,
-    hasTranscript: true,
-    hasSummary: true
-  },
-  {
-    id: 2,
-    title: "Fisiologia da Contração Cardíaca",
-    discipline: "fisiologia",
-    duration: "38 min",
-    date: "2024-01-14",
-    status: "processando",
-    hasAudio: true,
-    hasTranscript: false,
-    hasSummary: false
-  },
-  {
-    id: 3,
-    title: "Arritmias Cardíacas - Diagnóstico e Tratamento",
-    discipline: "cardiologia",
-    duration: "52 min",
-    date: "2024-01-13",
-    status: "transcrito",
-    hasAudio: true,
-    hasTranscript: true,
-    hasSummary: true
-  }
-];
-
+import { Stethoscope, Brain, Heart, Activity, Microscope, BookOpen, Clock, Download, Play, FileText, Calendar } from "lucide-react";
+const disciplines = [{
+  id: "anatomia",
+  name: "Anatomia",
+  icon: Microscope,
+  color: "medical-blue",
+  count: 12
+}, {
+  id: "fisiologia",
+  name: "Fisiologia",
+  icon: Activity,
+  color: "medical-teal",
+  count: 8
+}, {
+  id: "patologia",
+  name: "Patologia",
+  icon: Brain,
+  color: "medical-green",
+  count: 15
+}, {
+  id: "cardiologia",
+  name: "Cardiologia",
+  icon: Heart,
+  color: "medical-blue-dark",
+  count: 6
+}, {
+  id: "clinica",
+  name: "Clínica Médica",
+  icon: Stethoscope,
+  color: "medical-amber",
+  count: 20
+}];
+const lectures = [{
+  id: 1,
+  title: "Sistema Cardiovascular - Anatomia do Coração",
+  discipline: "anatomia",
+  duration: "45 min",
+  date: "2024-01-15",
+  status: "transcrito",
+  hasAudio: true,
+  hasTranscript: true,
+  hasSummary: true
+}, {
+  id: 2,
+  title: "Fisiologia da Contração Cardíaca",
+  discipline: "fisiologia",
+  duration: "38 min",
+  date: "2024-01-14",
+  status: "processando",
+  hasAudio: true,
+  hasTranscript: false,
+  hasSummary: false
+}, {
+  id: 3,
+  title: "Arritmias Cardíacas - Diagnóstico e Tratamento",
+  discipline: "cardiologia",
+  duration: "52 min",
+  date: "2024-01-13",
+  status: "transcrito",
+  hasAudio: true,
+  hasTranscript: true,
+  hasSummary: true
+}];
 export default function MedicalDashboard() {
   const [selectedDiscipline, setSelectedDiscipline] = useState("todos");
   const [selectedLecture, setSelectedLecture] = useState(lectures[0]);
-
-  const filteredLectures = selectedDiscipline === "todos" 
-    ? lectures 
-    : lectures.filter(lecture => lecture.discipline === selectedDiscipline);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-medical-blue-light to-background">
+  const filteredLectures = selectedDiscipline === "todos" ? lectures : lectures.filter(lecture => lecture.discipline === selectedDiscipline);
+  return <div className="min-h-screen bg-gradient-to-br from-medical-blue-light to-background">
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-4">
@@ -108,25 +108,15 @@ export default function MedicalDashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button
-                  variant={selectedDiscipline === "todos" ? "default" : "ghost"}
-                  className="w-full justify-start"
-                  onClick={() => setSelectedDiscipline("todos")}
-                >
+                <Button variant={selectedDiscipline === "todos" ? "default" : "ghost"} className="w-full justify-start" onClick={() => setSelectedDiscipline("todos")}>
                   Todas as disciplinas
                 </Button>
                 
                 <Separator className="my-2" />
                 
-                {disciplines.map((discipline) => {
-                  const Icon = discipline.icon;
-                  return (
-                    <Button
-                      key={discipline.id}
-                      variant={selectedDiscipline === discipline.id ? "default" : "ghost"}
-                      className="w-full justify-between"
-                      onClick={() => setSelectedDiscipline(discipline.id)}
-                    >
+                {disciplines.map(discipline => {
+                const Icon = discipline.icon;
+                return <Button key={discipline.id} variant={selectedDiscipline === discipline.id ? "default" : "ghost"} className="w-full justify-between" onClick={() => setSelectedDiscipline(discipline.id)}>
                       <div className="flex items-center">
                         <Icon className="h-4 w-4 mr-2" />
                         {discipline.name}
@@ -134,9 +124,8 @@ export default function MedicalDashboard() {
                       <Badge variant="secondary" className="ml-auto">
                         {discipline.count}
                       </Badge>
-                    </Button>
-                  );
-                })}
+                    </Button>;
+              })}
               </CardContent>
             </Card>
           </div>
@@ -156,16 +145,7 @@ export default function MedicalDashboard() {
                   <CardContent>
                     <ScrollArea className="h-[600px]">
                       <div className="space-y-3">
-                        {filteredLectures.map((lecture) => (
-                          <Card 
-                            key={lecture.id}
-                            className={`cursor-pointer transition-all hover:shadow-lg ${
-                              selectedLecture.id === lecture.id 
-                                ? 'ring-2 ring-primary bg-primary/5' 
-                                : 'hover:bg-secondary/50'
-                            }`}
-                            onClick={() => setSelectedLecture(lecture)}
-                          >
+                        {filteredLectures.map(lecture => <Card key={lecture.id} className={`cursor-pointer transition-all hover:shadow-lg ${selectedLecture.id === lecture.id ? 'ring-2 ring-primary bg-primary/5' : 'hover:bg-secondary/50'}`} onClick={() => setSelectedLecture(lecture)}>
                             <CardContent className="p-4">
                               <div className="space-y-2">
                                 <h3 className="font-medium text-sm line-clamp-2">
@@ -181,23 +161,17 @@ export default function MedicalDashboard() {
                                 </div>
 
                                 <div className="flex items-center space-x-1">
-                                  <Badge 
-                                    variant={lecture.status === 'transcrito' ? 'default' : 'secondary'}
-                                    className="text-xs"
-                                  >
+                                  <Badge variant={lecture.status === 'transcrito' ? 'default' : 'secondary'} className="text-xs">
                                     {lecture.status}
                                   </Badge>
-                                  {lecture.hasAudio && (
-                                    <Badge variant="outline" className="text-xs">
+                                  {lecture.hasAudio && <Badge variant="outline" className="text-xs">
                                       <Play className="h-2 w-2 mr-1" />
                                       Áudio
-                                    </Badge>
-                                  )}
+                                    </Badge>}
                                 </div>
                               </div>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </ScrollArea>
                   </CardContent>
@@ -226,7 +200,7 @@ export default function MedicalDashboard() {
                   </CardHeader>
                   <CardContent>
                     <Tabs defaultValue="resumo" className="w-full">
-                      <TabsList className="grid w-full grid-cols-3">
+                      <TabsList className="grid w-full grid-cols-4">
                         <TabsTrigger value="resumo">Resumo</TabsTrigger>
                         <TabsTrigger value="transcricao">Transcrição</TabsTrigger>
                         <TabsTrigger value="audio">Áudio</TabsTrigger>
@@ -314,6 +288,5 @@ export default function MedicalDashboard() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
