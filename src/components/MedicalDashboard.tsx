@@ -5,10 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Stethoscope, Brain, Heart, Activity, Microscope, BookOpen, Clock, Download, Play, FileText, Calendar, Book, icons, Pill, Dna, Bug, SquareActivity } from "lucide-react";
-// import { Scalpel } from "lucide-react";
-// "lucide-react" não exporta Scalpel. Use outro ícone, por exemplo, Scale:
-import { Scale } from "lucide-react";
+import { Stethoscope, Brain, Heart, Activity, Microscope, BookOpen, Clock, Download, Play, FileText, Calendar, Book, icons, Pill, Dna, Bug, SquareActivity, Plus } from "lucide-react";
+import AudioUpload from "./AudioUpload";
 
 const disciplines = [
 	{
@@ -172,8 +170,17 @@ export default function MedicalDashboard() {
 								← Voltar para Disciplinas
 							</Button>
 						</div>
-						{/* Lista de Aulas */}
-						<div className="lg:col-span-1">
+						{/* Upload de Áudio */}
+						<div className="lg:col-span-1 space-y-4">
+							<AudioUpload 
+								disciplineId={selectedDiscipline} 
+								disciplineName={disciplines.find(d => d.id === selectedDiscipline)?.name || ""} 
+								onUploadComplete={(result) => {
+									// Aqui você pode atualizar a lista de aulas
+									console.log('Upload completo:', result);
+								}}
+							/>
+							
 							<Card className="shadow-medical">
 								<CardHeader>
 									<CardTitle className="text-lg">Aulas Recentes</CardTitle>
