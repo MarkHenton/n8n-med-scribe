@@ -12,6 +12,13 @@ interface AudioUploadProps {
   onUploadComplete?: (result: any) => void;
 }
 
+interface WhisperXResponse {
+  task_id?: string;
+  taskId?: string;
+  status?: string;
+  message?: string;
+}
+
 export default function AudioUpload({ disciplineId, disciplineName, onUploadComplete }: AudioUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -57,49 +64,64 @@ export default function AudioUpload({ disciplineId, disciplineName, onUploadComp
     try {
       const formData = new FormData();
       formData.append('audio', selectedFile);
-      formData.append('discipline', disciplineId);
-      formData.append('disciplineName', disciplineName);
+      formData.append('discipline_id', disciplineId);
+      formData.append('discipline_name', disciplineName);
+      formData.append('filename', selectedFile.name);
 
-      // Simular progresso de upload
-      const uploadInterval = setInterval(() => {
-        setUploadProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(uploadInterval);
-            return 100;
-          }
-          return prev + 10;
-        });
-      }, 200);
-
-      // Substituir pela URL da sua VPS
-      const VPS_API_URL = 'https://sua-vps.com/api/upload-audio';
+      // Progresso real de upload usando XMLHttpRequest
+      const xhr = new XMLHttpRequest();
       
-      const response = await fetch(VPS_API_URL, {
-        method: 'POST',
-        body: formData,
+      const uploadPromise = new Promise((resolve, reject) => {
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            const progress = Math.round((event.loaded / event.total) * 100);
+            setUploadProgress(progress);
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const result = JSON.parse(xhr.responseText);
+              resolve(result);
+            } catch (e) {
+              reject(new Error('Resposta inválida do servidor'));
+            }
+          } else {
+            reject(new Error(`Erro HTTP: ${xhr.status}`));
+          }
+        });
+
+        xhr.addEventListener('error', () => {
+          reject(new Error('Erro de rede durante o upload'));
+        });
+
+        // Substitua pela URL da sua VPS WhisperX
+        const VPS_WHISPERX_URL = 'https://sua-vps.com/api/whisperx/transcribe';
+        
+        xhr.open('POST', VPS_WHISPERX_URL);
+        xhr.send(formData);
       });
 
-      clearInterval(uploadInterval);
-      setUploadProgress(100);
-
-      if (!response.ok) {
-        throw new Error('Erro no upload');
-      }
-
-      const result = await response.json();
+      const result = await uploadPromise as WhisperXResponse;
       
       setStatus('transcribing');
       setTranscriptionProgress(0);
       
-      // Polling para acompanhar o progresso da transcrição
-      pollTranscriptionProgress(result.taskId);
+      // Começar polling para progresso da transcrição
+      const taskId = result.task_id || result.taskId;
+      if (taskId) {
+        pollTranscriptionProgress(taskId);
+      } else {
+        throw new Error('ID da tarefa não retornado pela API');
+      }
 
     } catch (error) {
       console.error('Erro no upload:', error);
       setStatus('error');
       toast({
         title: "Erro no Upload",
-        description: "Não foi possível enviar o arquivo. Tente novamente.",
+        description: error.message || "Não foi possível enviar o arquivo. Tente novamente.",
         variant: "destructive",
       });
     } finally {
@@ -110,8 +132,8 @@ export default function AudioUpload({ disciplineId, disciplineName, onUploadComp
   const pollTranscriptionProgress = async (taskId: string) => {
     const pollInterval = setInterval(async () => {
       try {
-        // Substituir pela URL da sua VPS
-        const response = await fetch(`https://sua-vps.com/api/transcription-status/${taskId}`);
+        // Substituir pela URL da sua VPS WhisperX
+        const response = await fetch(`https://sua-vps.com/api/whisperx/status/${taskId}`);
         const data = await response.json();
 
         setTranscriptionProgress(data.progress || 0);
@@ -168,7 +190,7 @@ export default function AudioUpload({ disciplineId, disciplineName, onUploadComp
       case 'uploading':
         return 'Enviando áudio...';
       case 'transcribing':
-        return 'Transcrevendo com Whisper...';
+        return 'Transcrevendo com WhisperX...';
       case 'completed':
         return 'Concluído!';
       case 'error':
@@ -270,7 +292,7 @@ export default function AudioUpload({ disciplineId, disciplineName, onUploadComp
         <div className="text-xs text-muted-foreground space-y-1">
           <p>• Formatos aceitos: MP3, WAV, M4A, OGG</p>
           <p>• Tamanho máximo: 100MB</p>
-          <p>• A transcrição será feita automaticamente com Whisper AI</p>
+          <p>• A transcrição será feita automaticamente com WhisperX</p>
         </div>
       </CardContent>
     </Card>
