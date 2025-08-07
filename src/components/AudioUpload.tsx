@@ -96,8 +96,8 @@ export default function AudioUpload({ disciplineId, disciplineName, onUploadComp
           reject(new Error('Erro de rede durante o upload'));
         });
 
-        // Substitua pela URL da sua VPS WhisperX
-        const VPS_WHISPERX_URL = 'https://sua-vps.com/api/whisperx/transcribe';
+        // URL da sua VPS WhisperX
+        const VPS_WHISPERX_URL = 'https://medscribe.centerpersianas.com.br/api/whisperx/transcribe';
         
         xhr.open('POST', VPS_WHISPERX_URL);
         xhr.send(formData);
@@ -132,8 +132,8 @@ export default function AudioUpload({ disciplineId, disciplineName, onUploadComp
   const pollTranscriptionProgress = async (taskId: string) => {
     const pollInterval = setInterval(async () => {
       try {
-        // Substituir pela URL da sua VPS WhisperX
-        const response = await fetch(`https://sua-vps.com/api/whisperx/status/${taskId}`);
+        // URL da sua VPS WhisperX
+        const response = await fetch(`https://medscribe.centerpersianas.com.br/api/whisperx/status/${taskId}`);
         const data = await response.json();
 
         setTranscriptionProgress(data.progress || 0);
