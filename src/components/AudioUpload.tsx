@@ -97,7 +97,7 @@ export default function AudioUpload({ disciplineId, disciplineName, onUploadComp
         });
 
         // URL da sua VPS WhisperX
-        const VPS_WHISPERX_URL = 'https://medscribe.centerpersianas.com.br/api/whisperx/transcribe';
+        const VPS_WHISPERX_URL = 'https://whisperx.centerpersianas.com.br/api/whisperx/transcribe';
         
         xhr.open('POST', VPS_WHISPERX_URL);
         xhr.send(formData);
@@ -133,7 +133,7 @@ export default function AudioUpload({ disciplineId, disciplineName, onUploadComp
     const pollInterval = setInterval(async () => {
       try {
         // URL da sua VPS WhisperX
-        const response = await fetch(`https://medscribe.centerpersianas.com.br/api/whisperx/status/${taskId}`);
+        const response = await fetch(`https://whisperx.centerpersianas.com.br/api/whisperx/status/${taskId}`);
         const data = await response.json();
 
         setTranscriptionProgress(data.progress || 0);
